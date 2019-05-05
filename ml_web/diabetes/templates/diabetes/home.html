@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" href="ml.png" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #inbody {
+            margin-left: 25%;
+            width: 50%;
+            vertical-align: middle;
+        }
+    </style>
+    <script>
+        function check(){
+            window.location="/diabetes/checkit";
+        }
+        function about(){
+            window.location="/diabetes/about";
+        }
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+    <table style="width: 100%;margin: 1%">
+        <tr>
+            <td style="width: 150px;"><img src="ml.png" style="width: 150px;"></td>
+            <td>
+                <h1 style="width: 20%;margin-left: 25px;color: #234">Machine Learning</h1>
+                <h2 style="width: 20%;margin-left: 25px;color: #234">Diabetes Prediction</h2>
+            </td>
+        </tr>
+    </table>
+
+
+    <div id="inbody">
+        <img src="hypoglycemia2.png" style="margin-left: 10%" />
+        <h1 style="padding: 10px; text-align: center;font-size: 30px;margin-top: 25px">
+            Diabetes is a condition that impairs the body's ability to process blood glucose, otherwise known as blood
+            sugar.</h1>
+        <a href="https://www.medicalnewstoday.com/articles/323627.php">Source: www.medicalnewstoday.com</a>
+
+        <h1 style="padding: 10px; text-align: center;font-size: 30px;margin-top: 10%">Am I Having Diabetes?</h1>
+        <h2 style="padding: 10px; text-align: center;font-size: 20px;">Check with me first before you spend money at hospital</h2>
+        <div id="btn-action" style="margin-top: 1%;margin-left: 35%;">
+
+            <button type="button" onclick="check()" class="btn btn-primary"
+                style="font-size: 30px;padding: 10px;background-color: rgb(52, 114, 248)">Check it now</button>
+
+            <button type="button" onclick="about()" class="btn btn-default" style="font-size: 30px;padding: 10px;">About</button>
+
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

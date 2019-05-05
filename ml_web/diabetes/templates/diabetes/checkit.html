@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" href="ml.png" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Check it</title>
+    <style>
+        .loader {
+            border: 5% solid #ddd;
+            border-radius: 50%;
+            border-top: 10px solid rgb(45, 109, 247);
+            border-bottom: 10px solid rgb(45, 109, 247);
+            /* background-color: rgb(78, 131, 243);
+                border-top: 10px solid white;
+                border-bottom: 10px solid white; */
+
+            width: 100px;
+            height: 100px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <style>
+        #innerbody {
+            /* margin-left: 25%;
+                width: 50%;
+                vertical-align: middle; */
+        }
+
+        .center {
+            margin: auto;
+        }
+
+        .outer {
+
+            text-align: center;
+        }
+
+        .inner {
+            display: inline-block;
+        }
+
+        .inputer {
+            padding: 10px 10px;
+            line-height: 28px;
+            font-size: 25px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="jquery.min.js"></script>
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+        var title = ["Name", "BloodPressure", "Glucose", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age",
+            "Pregnancies"
+        ];
+        var image = ["hello.png", "blood_pressure.png", "glucose.png", "skin_thickness.png", "insulin.png", "bmi.png",
+            "diabetes_pedigree.png", "age.png", "pregnant.png"
+        ];
+        var desc = [
+            "Hello, I'm machine learning. i will predict your diabetes result",
+            "Blood pressure is the pressure of circulating blood on the walls of blood vessels",
+            "Normal and diabetic blood sugar ranges. For the majority of healthy individuals, normal blood sugar levels are as follows: Between 4.0 to 5.4 mmol/L (72 to 99 mg/dL) when fasting. Up to 7.8 mmol/L (140 mg/dL) 2 hours after eating.",
+            "Skin thickness is primarily determined by collagen content and is increased in insulin-dependent diabetes mellitus (IDDM).",
+            "Insulin is a hormone made by the pancreas that allows your body to use sugar (glucose) from carbohydrates in the food that you eat for energy or to store glucose for future use. Insulin helps keeps your blood sugar level from getting too high (hyperglycemia) or too low (hypoglycemia).",
+            "An increase in body fat is generally associated with an increase in risk of metabolic diseases such as type 2 diabetes mellitus, hypertension and dyslipidaemia (1). Body mass index (BMI) criteria are currently the primary focus in obesity treatment recommendations, with different treatment cutoff points based upon the presence or absence of obesity-related comorbid disease (Table 1). In addition, many patients with these metabolic diseases are either overweight or obese",
+            "Pedigree of the family showing diabetes status of each member, as well as genetic status, age of diagnosis, treatment and date of birth",
+            "The older you are, the more risk of diabetes because the your body can't hold much sugar",
+            "The number of pregnance, will affect the risk of diabetes"
+        ];
+        var inputasker = [
+            "Lets start with your name",
+            "Please input in mm / Hg", "Glucose concentration a 2 hours in an oral glucose",
+            "Please input in mm", "2-Hour serum insulin (mu U/ml)",
+            "Body mass index (weight in kg/(height in m)^2)",
+            "Diabetes pedigree function (if you don't know it, just input the average value: 0.47187)",
+            "I know you can do this :v", "if you a man, then simply input 0"
+        ]
+        var input = {};
+        var now = 0;
+
+        function refresh() {
+            //var elements = ["title", "image", "desc", "inputasker"]
+
+            $("#title").html(title[now]);
+            $("#image").attr("src", image[now]);
+            $("#desc").html(desc[now]);
+            $("#inputasker").html(inputasker[now]);
+        }
+
+        function about() {
+            window.location = "/diabetes/about";
+        }
+        var data = "";
+        
+        function onDone(response, status, xhr) {
+            document.getElementById("loader").style.visibility = "hidden";
+            data = JSON.parse(response);
+            if (data["diabetes"] == "1") {
+                console.log("Positive Diabetes");
+                $("#title0").html("Unfortunately...");
+                $("#image0").attr("src", "sad.png");
+                $("#msg").html(
+                    "With my prediction, you are positive of diabetes. i think you should check your blood with real doctor"
+                );
+            } else {
+                console.log("Negative Diabetes");
+                $("#title0").html("Congratulations!");
+                $("#image0").attr("src", "smile.png");
+                $("#msg").html("With my prediction, you are negative of diabetes.");
+            }
+            $("#title0").css("visibility", "visible");
+            $("#image0").css("visibility", "visible");
+            $("#msg").css("visibility", "visible");
+            $("#about").css("visibility", "visible");
+            $("#detail").css("visibility", "visible");
+
+
+        }
+
+        function detail() {
+            $("#title0").css("visibility", "hidden");
+            $("#image0").css("visibility", "hidden");
+            $("#msg").css("visibility", "hidden");
+            $("#about").css("visibility", "hidden");
+            $("#detail").css("visibility", "hidden");
+            $("#result_detail").css("display", "inline-block");
+            var details = ["detail_name", "detail_blood_pressure", "detail_glucose", "detail_skin_thickness", "detail_insulin",
+                "detail_bmi", "detail_diabetes_pedigree_function", "detail_age", "detail_pregnancies"
+            ];
+            for (var i = 0; i < title.length; i++) {
+                $("#" + details[i]).html(input[title[i]]);
+            }
+            $("#detail_accuracy").html(String(parseFloat( data["accuracy"])*100)+"%");
+            $("#detail_result").html(( data["diabetes"]=="1"? "Positive": "Negative"));
+        }
+
+        function go() {
+            // {
+            //     document.getElementById("innerbody").style.visibility = "hidden";
+            //     console.log("Negative Diabetes");
+            //     $("#title0").html("Congratulations!");
+            //     $("#image0").attr("src", "smile.png");
+            //     $("#msg").html("With my prediction, you are negative of diabetes.");
+            //     $("#title0").css("visibility", "hidden");
+            // $("#image0").css("visibility", "visible");
+            // $("#msg").css("visibility", "visible");
+            // $("#about").css("visibility", "visible");
+            // $("#detail").css("visibility", "visible");                
+            // }
+
+            // return;
+
+            input[title[now]] = $("#input").val();
+            console.log($("#input").val());
+            now++;
+
+            if (now == title.length) {
+                document.getElementById("innerbody").style.visibility = "hidden";
+                document.getElementById("loader").style.visibility = "visible";
+                $("#msg").html("Learning from the data and predicting from your output...");
+                $("#msg").css("visibility", "visible");
+                input['csrfmiddlewaretoken'] = csrftoken;
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:8000/diabetes/checkit/finish/",
+                    data: input,
+                    timeout: 180000, //3 minutes
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (textStatus === "timeout") {
+                            //do something on timeout
+                        }
+                    },
+                    success: onDone
+                });
+
+                // $.post("http://127.0.0.1:8000/diabetes/checkit/finish/", input, function (response, status) {
+                // });
+                return;
+
+            }
+
+            refresh();
+        }
+
+        function back() {
+            now--;
+            if (now == -1) {
+                now = 0;
+            }
+            refresh();
+        }
+
+        function home() {
+            window.location = "/diabetes/home";
+        }
+    </script>
+</head>
+
+<body>
+    <table style="width: 100%;margin: 1%" onclick="home()">
+        <tr>
+            <td style="width: 150px;"><img src="ml.png" style="width: 150px;"></td>
+            <td>
+                <h1 style="width: 20%;margin-left: 25px;color: #234">Machine Learning</h1>
+                <h2 style="width: 20%;margin-left: 25px;color: #234">Diabetes Prediction</h2>
+            </td>
+        </tr>
+    </table>
+
+
+    <table id="result_detail" style="display: none;padding-right: 15px;margin-left: 50px;">
+            <tr>
+                <td>
+                    <h3>Machine Learning: </h3>
+                </td>
+                <td>
+                    <h3>Diabetes Prediction</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Algorithm: </h3>
+                </td>
+                <td>
+                    <h3>Random Forest</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Accuracy: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_accuracy"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Name: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_name"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Pregnancies: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_pregnancies"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Glucose: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_glucose"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Blood Pressure: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_blood_pressure"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Skin Thickness: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_skin_thickness"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Insulin: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_insulin"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Body Mass Index: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_bmi"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Diabetes Pedigree Function: </h3>
+                </td>
+    
+                <td>
+                    <h3 style="margin-left: 25px;" id="detail_diabetes_pedigree_function"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Age: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_age"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Result: </h3>
+                </td>
+                <td>
+                    <h3 id="detail_result"></h3>
+                </td>
+            </tr>
+        </table>
+        
+    <div class="loader" id="loader" style="margin-top:15%;margin-left: 47%;visibility:hidden;position: fixed;"></div>
+    <div style="position: fixed;width: 100%;" id="result">
+        <h1 id="title0" style="color: #333; margin-top: 25px;text-align: center;visibility: hidden;">Title...</h1>
+        <img id="image0" src="random_forest.png"
+            style="margin-top:0%;margin-left: 40%;width: 20%;border-radius: 15%;visibility: hidden;">
+        <h2 id="msg" style="color: #333; margin-top: 25px;text-align: center;visibility: hidden;">Reading the data...
+        </h2> -->
+        <button id="about" type="button" onclick="about()" class="btn btn-primary"
+            style="margin-top:75px;visibility: hidden;margin-left: 52%;font-size: 40px;padding: 10px;background-color: rgb(52, 114, 248);position:fixed;">About</button>
+        <button id="detail" type="button" onclick="detail()" class="btn btn-primary"
+            style="margin-top:75px;visibility:hidden;margin-left: 37%;font-size: 40px;padding: 10px;background-color: rgb(52, 114, 248);position:fixed;">Result
+            Detail</button>
+
+    </div>
+    <div id="innerbody" class="center outer">
+        <p style="font-size: 30px;text-align: center" id="title">Name</p>
+        <img id="image" src="hello.png" style="height: 300px;border-radius: 5%;border: 10px solid #000"
+            class="inner">
+        <p style="font-size: 25px;text-align: center;max-width: 30%;margin-left: 35%" id="desc">Hello. I'm machine learning that will
+        predict your diabetes result. let's start with your name</p>
+        <div class="outer"
+            style="background-color: rgb(45, 109, 247);margin-left: 35%;margin-right: 35%;padding: 10px;border-radius: 10px;">
+            <p style="color: #fff;font-size: 25px;text-align: center;" id="inputasker">Please Input your name</p>
+            <input style="margin-top: 10px;" type="text" class="inner inputer" id="input">
+            <br>
+            <br>
+            <input type="image" src="back.png" style="margin-right: 50px;" onclick="back();">
+            <input type="image" src="go.png" style="margin-left: 50px;" onclick="go();">
+        </div>
+    </div>
+
+</body>
+
+</html>
